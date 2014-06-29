@@ -1,3 +1,11 @@
+(*
+
+Informacoes sobre utilizacao e custos dos estadios brasileiros na Copa 2014
+
+Dados em
+http://fivethirtyeight.com/features/were-the-billions-brazil-spent-on-world-cup-stadiums-worth-it/
+
+*)
 
 type estadio = {
   nome :      string;
