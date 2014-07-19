@@ -50,7 +50,7 @@ let oper o =
   match o with
   | OpSoma -> (+)
   | OpSub -> (-)
-  | OpMult -> ( * )
+  | OpMult -> ( * )  (* espaços são necessários para não confundir com comentário *)
 
 (** Executa uma instrução da máquina de pilha. 
     Dada uma pilha, retorna a pilha resultante apos a execução. *)
