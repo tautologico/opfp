@@ -5,14 +5,16 @@
 
  *)
 
-(** Expressoes aritmeticas *)
+(** {1 Expressões Aritméticas } *)
+
+(** Tipo para expressões *)
 type exp = 
   | Const of int 
   | Adic of exp * exp 
   | Sub of exp * exp
   | Mult of exp * exp
 
-(** Interpretador para expressoes *)
+(** Interpretador para expressões *)
 let rec eval e = 
   match e with
     Const n -> n
@@ -20,29 +22,38 @@ let rec eval e =
   | Sub (e1, e2) -> eval e1 - eval e2
   | Mult (e1, e2) -> eval e1 * eval e2
 
-(** Uma maquina de pilha para executar expressoes *)
+(** {1 Máquina de Pilha } *)
+
+(** Operações da máquina *)
 type operacao = OpSoma | OpSub | OpMult
 
+(** Instruções da máquina *)
 type instrucao = 
   | EmpConst of int
   | Oper of operacao
 
+(** Um programa é uma lista de instrucoes *)
 type programa = instrucao list 
+
+(** A pilha da máquina é uma lista de valores inteiros *)
 type pilha = int list 
 
+(** Obtém dois operandos de uma pilha *)
 let operandos p = 
   match p with
   | [] -> None
   | _ :: [] -> None
   | n1 :: n2 :: r -> Some ((n1, n2), r)
 
+(** Obtem a função em OCaml que corresponde a cada operador da máquina *)
 let oper o = 
   match o with
   | OpSoma -> (+)
   | OpSub -> (-)
   | OpMult -> ( * )
 
-(** Execucao de instrucoes da maquina de pilha *)
+(** Executa uma instrução da máquina de pilha. 
+    Dada uma pilha, retorna a pilha resultante apos a execução. *)
 let exec_inst p inst = 
   match inst with
     EmpConst n -> n :: p
@@ -53,7 +64,8 @@ let exec_inst p inst =
         let op = oper o in
         (op n1 n2) :: r
 
-(** Execucao de programas da maquina de pilha *)
+(** Executa um programa da máquina de pilha, assumindo que a pilha 
+    inicia vazia. *)
 let rec exec_prog p = 
   List.fold_left exec_inst [] p 
 
