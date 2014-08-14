@@ -10,15 +10,22 @@
 (** Tipo para expressões *)
 type exp = 
   | Const of int 
-  | Adic of exp * exp 
+  | Soma of exp * exp 
   | Sub of exp * exp
   | Mult of exp * exp
+
+let rec print e = 
+  match e with 
+    Const n -> string_of_int n
+  | Soma (e1, e2) -> Printf.sprintf "(%s + %s)" (print e1) (print e2)
+  | Sub (e1, e2) -> Printf.sprintf "(%s - %s)" (print e1) (print e2)
+  | Mult (e1, e2) -> Printf.sprintf "(%s * %s)" (print e1) (print e2)
 
 (** Interpretador para expressões *)
 let rec eval e = 
   match e with
     Const n -> n
-  | Adic (e1, e2) -> eval e1 + eval e2
+  | Soma (e1, e2) -> eval e1 + eval e2
   | Sub (e1, e2) -> eval e1 - eval e2
   | Mult (e1, e2) -> eval e1 * eval e2
 
