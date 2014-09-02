@@ -17,9 +17,12 @@ type exp =
 let rec print e = 
   match e with 
     Const n -> string_of_int n
-  | Soma (e1, e2) -> Printf.sprintf "(%s + %s)" (print e1) (print e2)
-  | Sub (e1, e2) -> Printf.sprintf "(%s - %s)" (print e1) (print e2)
-  | Mult (e1, e2) -> Printf.sprintf "(%s * %s)" (print e1) (print e2)
+  | Soma (e1, e2) -> 
+     Printf.sprintf "(%s + %s)" (print e1) (print e2)
+  | Sub (e1, e2) -> 
+     Printf.sprintf "(%s - %s)" (print e1) (print e2)
+  | Mult (e1, e2) -> 
+     Printf.sprintf "(%s * %s)" (print e1) (print e2)
 
 (** Interpretador para expressões *)
 let rec eval e = 
@@ -36,7 +39,7 @@ type operacao = OpSoma | OpSub | OpMult
 
 (** Instruções da máquina *)
 type instrucao = 
-  | EmpConst of int
+  | Empilha of int
   | Oper of operacao
 
 (** Um programa é uma lista de instrucoes *)
@@ -63,7 +66,7 @@ let oper o =
     Dada uma pilha, retorna a pilha resultante apos a execução. *)
 let exec_inst p inst = 
   match inst with
-    EmpConst n -> n :: p
+    Empilha n -> n :: p
   | Oper o -> 
      match operandos p with
        None -> p   (* mantem a mesma pilha se alguma operacao deu errado *)
