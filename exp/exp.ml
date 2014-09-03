@@ -79,7 +79,20 @@ let exec_inst p inst =
 let rec exec_prog p = 
   List.fold_left exec_inst [] p 
 
-(* TODO compilacao de expressoes para maquina de pilha *)  
+(** Executa um programa e retorna o resultado, se houver. *)
+let executa p = 
+  match exec_prog p with
+    [] -> None
+  | r :: _ -> Some r
+
+(** Compila uma expressão em árvore sintática para um programa da 
+    máquina de pilha. *)
+let rec compila e = 
+  match e with
+  | Const n       -> [Empilha n]
+  | Soma (e1, e2) -> (compila e1) @ (compila e2) @ [Oper OpSoma]
+  | Sub (e1, e2)  -> (compila e1) @ (compila e2) @ [Oper OpSub]
+  | Mult (e1, e2) -> (compila e1) @ (compila e2) @ [Oper OpMult]
 
 (* TODO otimizacao *)
 
