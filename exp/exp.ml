@@ -94,6 +94,26 @@ let rec compila e =
   | Sub (e1, e2)  -> (compila e1) @ (compila e2) @ [Oper OpSub]
   | Mult (e1, e2) -> (compila e1) @ (compila e2) @ [Oper OpMult]
 
-(* TODO otimizacao *)
+(* Otimizacao *)
+
+(** Elimina sub-expressões de soma com o valor 0 *)
+let rec elimina_soma_0 e = 
+  match e with
+  | Const _ -> e
+  | Soma (Const 0, e2) -> elimina_soma_0 e2
+  | Soma (e1, Const 0) -> elimina_soma_0 e1
+  | Soma (e1, e2) -> Soma (elimina_soma_0 e1, elimina_soma_0 e2)
+  | Sub (e1, e2)  -> Sub (elimina_soma_0 e1, elimina_soma_0 e2)
+  | Mult (e1, e2) -> Mult (elimina_soma_0 e1, elimina_soma_0 e2)
+
+(** {1 Opcional: análise sintática } *)
+
+type lexer = { str: string; }
+
+type token = { str: string; pos_ini: int; pos_prox: int }
+
+(* 
+let proximo_token tok = 
+ *)
 
 (* TODO traducao para ILasm *)
