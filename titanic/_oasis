@@ -1,0 +1,18 @@
+OASISFormat:  0.4
+Name:         Titanic
+Version:      0.0
+Synopsis:     Arvores de decisao para o problema do Titanic
+Authors:      Andrei Formiga
+License:      MIT
+Plugins:      META (0.4)
+BuildTools:   ocamlbuild
+
+Executable titanic
+  Path:           src
+  MainIs:         titanic.ml
+  Install:        false
+  BuildDepends:   csv (>= 1.3.3)
+  CompiledObject: best
+  ByteOpt:        
+  NativeOpt:      -inline 20
+
