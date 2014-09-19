@@ -25,22 +25,6 @@ type passageiro = {
   embarque   : porto
 }
 
-let missing data = 
-  let process_row i r = 
-    List.concat @@ List.mapi (fun j e -> if e = "" then [(i, j)] else []) r
-  in
-  List.concat @@ List.mapi process_row data
-
-let missing_rows m = 
-  let module IntSet = Set.Make(struct type t = int let compare = compare end) in
-  let rowset = List.fold_left (fun s (r, c) -> IntSet.add r s) IntSet.empty m in
-  IntSet.fold (fun x l -> x :: l) rowset []
-
-let missing_cols m = 
-  let module IntSet = Set.Make(struct type t = int let compare = compare end) in
-  let colset = List.fold_left (fun s (r, c) -> IntSet.add c s) IntSet.empty m in
-  IntSet.fold (fun x l -> x :: l) colset []
-
 (* funcoes de leitura *)
 let ler_sobr s = if s = "0" then false else true
 let ler_classe s = 
