@@ -25,7 +25,8 @@ type passageiro = {
   embarque   : porto option
 }
 
-(* Funcoes para detectar dados faltantes *)
+(*** Funcoes para detectar dados faltantes ***)
+
 let dados_em_falta csv = 
   let linha i lin = 
     List.concat @@ List.mapi (fun j el -> if el = "" then [(i, j)] else []) lin
@@ -39,8 +40,11 @@ let colunas_em_falta csv =
   List.fold_left (fun set (lin, col) -> IntSet.add col set) IntSet.empty faltas
   |> set_lista 
 
-(* funcoes de leitura *)
+
+(*** funcoes de leitura ***)
+
 let ler_sobr s = if s = "0" then false else true
+
 let ler_classe s = 
   match s with
   | "1" -> Primeira
@@ -82,7 +86,7 @@ let ler_dados_treino nome =
       preco = ler_float prec; cabine = cab; embarque = ler_embarq emb } in
   List.map ler_pass @@ List.tl csv 
 
-(* TODO: coluna sobreviveu? *)
+(* Dados de teste nao contem a coluna de sobrevivencia *)
 let ler_dados_teste nome = 
   let csv = Csv.load nome in
   let ler_pass [id; cls; nome; gen; idade; ip; pf; pass; prec; cab; emb] = 
@@ -92,7 +96,9 @@ let ler_dados_teste nome =
       preco = ler_float prec; cabine = cab; embarque = ler_embarq emb } in
   List.map ler_pass @@ List.tl csv 
 
-(* Exploração dos dados *)
+
+(*** Exploração dos dados ***)
+
 let apenas_homens d = 
   List.filter (fun p -> p.gen <> Some Fem) d 
 
