@@ -8,24 +8,24 @@ let arq_teste  = "test.csv"
 
 type classe = Primeira | Segunda | Terceira 
 type genero = Masc | Fem
-type porto = Cherbourg | Queenstown | Southampton | NaoEspec
+type porto = Cherbourg | Queenstown | Southampton
 
 type passageiro = { 
   id         : int;
   sobreviveu : bool;
   classe     : classe;
   nome       : string;
-  gen        : genero;
+  gen        : genero option;
   idade      : float;
   irmpar     : int;
   paisfilhos : int;
   passagem   : string;
   preco      : float;
   cabine     : string;
-  embarque   : porto
+  embarque   : porto option
 }
 
-(* Funcoes para explorar os dados *)
+(* Funcoes para detectar dados faltantes *)
 let dados_em_falta csv = 
   let linha i lin = 
     List.concat @@ List.mapi (fun j el -> if el = "" then [(i, j)] else []) lin
@@ -48,9 +48,19 @@ let ler_classe s =
   | "3" -> Terceira
   | _ -> failwith "Classe inexistente"
 
-let ler_genero s = if s = "male" then Masc else Fem 
+let ler_genero s = 
+  match s with
+  | "male" -> Some Masc
+  | "female" -> Some Fem
+  | _ -> None
 
-let ler_idade s = 
+let ler_int s = 
+  try
+    int_of_string s 
+  with
+    Failure _ -> 0
+
+let ler_float s = 
   try
     float_of_string s
   with 
@@ -58,17 +68,54 @@ let ler_idade s =
 
 let ler_embarq s = 
   match s with 
-  | "C" -> Cherbourg
-  | "Q" -> Queenstown
-  | "S" -> Southampton
-  | _ -> NaoEspec
+  | "C" -> Some Cherbourg
+  | "Q" -> Some Queenstown
+  | "S" -> Some Southampton
+  | _ -> None 
 
-let ler_dados nome = 
+let ler_dados_treino nome = 
   let csv = Csv.load nome in
   let ler_pass [id; sobr; cls; nome; gen; idade; ip; pf; pass; prec; cab; emb] = 
-    { id = int_of_string id; sobreviveu = ler_sobr sobr; classe = ler_classe cls; 
-      nome = nome; gen = ler_genero gen; idade = ler_idade idade; 
-      irmpar = int_of_string ip; paisfilhos = int_of_string pf; passagem = pass;
-      preco = float_of_string prec; cabine = cab; embarque = ler_embarq emb } in
+    { id = ler_int id; sobreviveu = ler_sobr sobr; classe = ler_classe cls; 
+      nome = nome; gen = ler_genero gen; idade = ler_float idade; 
+      irmpar = ler_int ip; paisfilhos = ler_int pf; passagem = pass;
+      preco = ler_float prec; cabine = cab; embarque = ler_embarq emb } in
   List.map ler_pass @@ List.tl csv 
 
+(* TODO: coluna sobreviveu? *)
+let ler_dados_teste nome = 
+  let csv = Csv.load nome in
+  let ler_pass [id; cls; nome; gen; idade; ip; pf; pass; prec; cab; emb] = 
+    { id = ler_int id; sobreviveu = false; classe = ler_classe cls; 
+      nome = nome; gen = ler_genero gen; idade = ler_float idade; 
+      irmpar = ler_int ip; paisfilhos = ler_int pf; passagem = pass;
+      preco = ler_float prec; cabine = cab; embarque = ler_embarq emb } in
+  List.map ler_pass @@ List.tl csv 
+
+(* Exploração dos dados *)
+let apenas_homens d = 
+  List.filter (fun p -> p.gen <> Some Fem) d 
+
+let apenas_mulheres d = 
+  List.filter (fun p -> p.gen = Some Fem) d 
+
+let taxa_sobrevivencia d = 
+  let sobr = List.fold_left (fun s p -> if p.sobreviveu then s + 1 else s) 0 d in
+  (float sobr) /. (float @@ List.length d)
+
+(* Um classificador simples *)
+let sobrevivencia_por_genero d = 
+  List.map (fun p -> if p.gen = Some Fem then (p.id, 1) else (p.id, 0)) d 
+
+let escreve_resultado res nome = 
+  let arqout = open_out nome in
+  Printf.fprintf arqout "PassengerId,Survived\n"; 
+  List.iter (fun (id, s) -> Printf.fprintf arqout "%d,%d\n" id s) res;
+  close_out arqout
+
+let classifica_teste_por_genero () = 
+  let dados_teste = ler_dados_teste arq_teste in
+  let resultado = sobrevivencia_por_genero dados_teste in
+  escreve_resultado resultado "genero.csv" 
+
+(* Especificando arvores manualmente *)
