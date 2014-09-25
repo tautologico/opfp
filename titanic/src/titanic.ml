@@ -105,9 +105,15 @@ let apenas_homens d =
 let apenas_mulheres d = 
   List.filter (fun p -> p.gen = Some Fem) d 
 
+(* calcula a taxa de sobrevivencia de passageiros que satisfazem um predicado *)
+let taxa_sobrev_pred pred d = 
+  let pass = List.filter pred d in 
+  let sobr = List.fold_left (fun s p -> if p.sobreviveu then s + 1 else s) 0 pass in
+  (float sobr) /. (float @@ List.length pass)
+
+(* calcula a taxa de sobrevivencia geral *)
 let taxa_sobrevivencia d = 
-  let sobr = List.fold_left (fun s p -> if p.sobreviveu then s + 1 else s) 0 d in
-  (float sobr) /. (float @@ List.length d)
+  taxa_sobrev_pred (fun p -> true) d
 
 (* Um classificador simples *)
 let sobrevivencia_por_genero d = 
@@ -124,4 +130,26 @@ let classifica_teste_por_genero () =
   let resultado = sobrevivencia_por_genero dados_teste in
   escreve_resultado resultado "genero.csv" 
 
+(* Separacao por faixas de preco *)
+type faixa = F0a9 | F10a19 | F20a29 | F30maior 
+
+let calcula_faixa prec = 
+  if prec >= 30.0 then F30maior
+  else if prec >= 20.0 then F20a29
+  else if prec >= 10.0 then F10a19 
+  else F0a9
+
+let taxa_sobrev_faixa d f = 
+  taxa_sobrev_pred (fun p -> calcula_faixa p = f) d
+
+let sobrev_faixas d = 
+  List.map (fun f -> taxa_sobrev_faixa d f) [F0a9; F10a19; F20a29; F30maior]
+
+
 (* Especificando arvores manualmente *)
+
+type teste = passageiro -> int 
+
+(* arvore de decisao com resultado booleano *)
+type arvdec = Teste of teste * arvdec list | Result of bool 
+
