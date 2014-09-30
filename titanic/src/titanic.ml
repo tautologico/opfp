@@ -90,11 +90,20 @@ let ler_embarq s =
 
 let ler_dados_treino nome = 
   let csv = Csv.load nome in
-  let ler_pass [id; sobr; cls; nome; gen; idade; ip; pf; pass; prec; cab; emb] = 
-    { id = ler_int id; sobreviveu = ler_sobr sobr; classe = ler_classe cls; 
-      nome = nome; gen = ler_genero gen; idade = ler_float idade; 
-      irmpar = ler_int ip; paisfilhos = ler_int pf; passagem = pass;
-      preco = ler_float prec; cabine = cab; embarque = ler_embarq emb } 
+  let ler_pass [id; sobr; cls; nome; gen; idade; ip; pf; pass; 
+                prec; cab; emb] = 
+    { id = ler_int id; 
+      sobreviveu = ler_sobr sobr; 
+      classe = ler_classe cls; 
+      nome = nome; 
+      gen = ler_genero gen; 
+      idade = ler_float idade; 
+      irmpar = ler_int ip; 
+      paisfilhos = ler_int pf; 
+      passagem = pass;
+      preco = ler_float prec; 
+      cabine = cab; 
+      embarque = ler_embarq emb } 
   in
   List.map ler_pass @@ List.tl csv 
 
@@ -125,7 +134,9 @@ let apenas_mulheres d =
 let taxa_sobrev_pred pred d = 
   let pass = List.filter pred d in 
   let sobr = 
-    List.fold_left (fun s p -> if p.sobreviveu then s + 1 else s) 0 pass 
+    pass |> List.fold_left (fun s p -> 
+                            if p.sobreviveu then s + 1 
+                            else s) 0 
   in
   (float sobr) /. (float @@ List.length pass)
 
