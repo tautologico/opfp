@@ -160,7 +160,7 @@ let calcula_faixa prec =
   else F0a9
 
 let taxa_sobrev_faixa d f = 
-  taxa_sobrev_pred (fun p -> calcula_faixa p = f) d
+  taxa_sobrev_pred (fun p -> calcula_faixa p.preco = f) d
 
 let sobrev_faixas d = 
   List.map (fun f -> taxa_sobrev_faixa d f) [F0a9; F10a19; F20a29; F30maior]
