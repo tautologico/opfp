@@ -179,8 +179,27 @@ let sobrev_faixas d =
 
 (* Especificando arvores manualmente *)
 
-type teste = passageiro -> int 
-
 (* arvore de decisao com resultado booleano *)
-type arvdec = Teste of teste * arvdec list | Result of bool 
+type teste = passageiro -> arvdec
+and arvdec = Teste of teste | Result of bool 
+
+(* arvore de classificacao por genero *)
+let arv_genero = 
+  Teste (fun p -> if p.gen = Some Fem then Result true
+                  else Result false)
+
+(* classificador usando arvores de decisao *) 
+let rec aplica_arvore arv p = 
+  match arv with
+  | Result true -> (p.id, 1)
+  | Result false -> (p.id, 0)
+  | Teste t -> aplica_arvore (t p) p
+
+let aplica_arvore_dados arv d = 
+  List.map (aplica_arvore arv) d 
+
+let classifica_arv_genero () = 
+  let dados_teste = ler_dados_teste arq_teste in
+  let resultado = aplica_arvore_dados arv_genero dados_teste in
+  escreve_resultado resultado "genero.csv"
 
