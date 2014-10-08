@@ -180,20 +180,25 @@ let sobrev_faixas d =
 (* Especificando arvores manualmente *)
 
 (* arvore de decisao com resultado booleano *)
-type teste = passageiro -> arvdec
-and arvdec = Teste of teste | Result of bool 
+(* 
+type teste_1 = passageiro -> arvdec_1
+and arvdec_1 = Teste of teste_1 | Result of bool 
+ *)
+
+type teste = passageiro -> int
+type arvdec = Teste of teste * arvdec list | Result of bool 
 
 (* arvore de classificacao por genero *)
 let arv_genero = 
-  Teste (fun p -> if p.gen = Some Fem then Result true
-                  else Result false)
+  Teste ((fun p -> if p.gen = Some Fem then 0
+                   else 1), [Result true; Result false])
 
 (* classificador usando arvores de decisao *) 
 let rec aplica_arvore arv p = 
   match arv with
   | Result true -> (p.id, 1)
   | Result false -> (p.id, 0)
-  | Teste t -> aplica_arvore (t p) p
+  | Teste (t, l) -> aplica_arvore (List.nth l (t p)) p
 
 let aplica_arvore_dados arv d = 
   List.map (aplica_arvore arv) d 
@@ -225,4 +230,7 @@ let entropia s =
   if p = 0 || n = 0 then 0.0
   else -. (tfrac *. log2 tfrac) -. (ffrac *. log2 ffrac)
   
-(* Calcula a entropia apos dividir o conjunto por um teste *)
+(* Calcula a entropia apos dividir o conjunto s pelo teste t *)
+let entrop_teste t s = 
+  0.0
+
