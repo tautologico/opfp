@@ -203,3 +203,26 @@ let classifica_arv_genero () =
   let resultado = aplica_arvore_dados arv_genero dados_teste in
   escreve_resultado resultado "genero.csv"
 
+
+(* Algoritmo ID3 *)
+
+(* logaritmo de base 2 *)
+let log2 n = (log10 n) /. (log10 2.0)
+
+(* Conta quantos sobreviveram e nao sobreviveram no conjunto de passageiros s *)
+let contagem_classes s = 
+  let conta (t, f) p = 
+    if p.sobreviveu then (t+1, f) else (t, f+1)
+  in 
+  List.fold_left conta (0, 0) s
+
+(* Calcula a entropia H(s) de um conjunto de passageiros s *)
+let entropia s = 
+  let t, f = contagem_classes s in
+  let tf, ff = float t, float f in
+  let tfrac = tf /. (tf +. ff) in
+  let ffrac = ff /. (tf +. ff) in
+  if p = 0 || n = 0 then 0.0
+  else -. (tfrac *. log2 tfrac) -. (ffrac *. log2 ffrac)
+  
+(* Calcula a entropia apos dividir o conjunto por um teste *)
