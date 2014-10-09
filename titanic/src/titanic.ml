@@ -227,10 +227,44 @@ let entropia s =
   let tf, ff = float t, float f in
   let tfrac = tf /. (tf +. ff) in
   let ffrac = ff /. (tf +. ff) in
-  if p = 0 || n = 0 then 0.0
+  if t = 0 || f = 0 then 0.0
   else -. (tfrac *. log2 tfrac) -. (ffrac *. log2 ffrac)
-  
+
+(* Uma hashtable com chave inteira *)
+module Hash = 
+  Hashtbl.Make (struct 
+                 type t = int
+                 let equal n m = n = m 
+                 let hash n = n 
+               end)
+
+(** Particiona o conjunto [s] em subconjuntos de acordo com o teste [t]. *)
+let particao t s = 
+  let atualiza_part h k p = 
+    if Hash.mem h k then
+      Hash.replace h k (p :: (Hash.find h k))
+    else
+      Hash.add h k [p]
+  in
+  let phash = Hash.create 10 in
+  let results = List.map t s in
+  List.iter2 (atualiza_part phash) results s; 
+  phash
+
+(* insere uma chave com valor 1 se nao existir, incrementa se existir *)
+let atualiza_contagem h k = 
+  if Hash.mem h k then
+    Hash.replace h k ((Hash.find h k) + 1)
+  else
+    Hash.add h k 1
+
 (* Calcula a entropia apos dividir o conjunto s pelo teste t *)
 let entrop_teste t s = 
-  0.0
+  let part = particao t s in
+  let entrop_valor i si ac = 
+    let frac = (float @@ List.length si) /. (float @@ List.length s) in
+    ac +. frac *. (entropia si)
+  in
+  Hash.fold entrop_valor part 0.0 
+
 
