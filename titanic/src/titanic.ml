@@ -177,23 +177,18 @@ let sobrev_faixas d =
   List.map (fun f -> taxa_sobrev_faixa d f) [F0a9; F10a19; F20a29; F30maior]
 
 
+(* Arvores de decisao *)
 (* Especificando arvores manualmente *)
-
-(* arvore de decisao com resultado booleano *)
-(* 
-type teste_1 = passageiro -> arvdec_1
-and arvdec_1 = Teste of teste_1 | Result of bool 
- *)
 
 type teste = passageiro -> int
 type arvdec = Teste of teste * arvdec list | Result of bool 
 
-(* arvore de classificacao por genero *)
+(** Arvore de classificacao por genero. *)
 let arv_genero = 
   Teste ((fun p -> if p.gen = Some Fem then 0
                    else 1), [Result true; Result false])
 
-(* classificador usando arvores de decisao *) 
+(** Classifica o passageiro [p] usando a árvore de decisao [arv]. *) 
 let rec aplica_arvore arv p = 
   match arv with
   | Result true -> (p.id, 1)
@@ -211,17 +206,18 @@ let classifica_arv_genero () =
 
 (* Algoritmo ID3 *)
 
-(* logaritmo de base 2 *)
+(** Logaritmo de base 2. *)
 let log2 n = (log10 n) /. (log10 2.0)
 
-(* Conta quantos sobreviveram e nao sobreviveram no conjunto de passageiros s *)
+(** Conta quantos sobreviveram e nao sobreviveram no conjunto de 
+    passageiros [s]. *)
 let contagem_classes s = 
   let conta (t, f) p = 
     if p.sobreviveu then (t+1, f) else (t, f+1)
   in 
   List.fold_left conta (0, 0) s
 
-(* Calcula a entropia H(s) de um conjunto de passageiros s *)
+(** Calcula a entropia H(s) de um conjunto de passageiros [s]. *)
 let entropia s = 
   let t, f = contagem_classes s in
   let tf, ff = float t, float f in
@@ -230,7 +226,7 @@ let entropia s =
   if t = 0 || f = 0 then 0.0
   else -. (tfrac *. log2 tfrac) -. (ffrac *. log2 ffrac)
 
-(* Uma hashtable com chave inteira *)
+(** Uma hashtable com chave inteira. *)
 module Hash = 
   Hashtbl.Make (struct 
                  type t = int
@@ -251,14 +247,7 @@ let particao t s =
   List.iter2 (atualiza_part phash) results s; 
   phash
 
-(* insere uma chave com valor 1 se nao existir, incrementa se existir *)
-let atualiza_contagem h k = 
-  if Hash.mem h k then
-    Hash.replace h k ((Hash.find h k) + 1)
-  else
-    Hash.add h k 1
-
-(* Calcula a entropia apos dividir o conjunto s pelo teste t *)
+(** Calcula a entropia apos dividir o conjunto [s] pelo teste [t]. *)
 let entrop_teste t s = 
   let part = particao t s in
   let entrop_valor i si ac = 
@@ -267,4 +256,8 @@ let entrop_teste t s =
   in
   Hash.fold entrop_valor part 0.0 
 
-
+(** Constroi uma arvore de decisao seguindo o algoritmo ID3, 
+ usando dados de treinamento [d] e a lista de testes [lt]. *)
+let id3 d lt = 
+  let hd = entropia d in
+  Result false
