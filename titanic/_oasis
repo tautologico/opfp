@@ -7,12 +7,22 @@ License:      MIT
 Plugins:      META (0.4)
 BuildTools:   ocamlbuild
 
-Executable titanic
+Library Titanic
   Path:           src
-  MainIs:         titanic.ml
-  Install:        false
+  Modules:        Titanic
   BuildDepends:   csv (>= 1.3.3)
+  CompiledObject: best
+  NativeOpt:      -inline 20
+
+Executable test
+  Path:           test
+  MainIs:         test.ml
+  Install:        false
+  Build$:         flag(tests)
+  BuildDepends:   oUnit (>= 2.0.0), Titanic
   CompiledObject: best
   ByteOpt:        
   NativeOpt:      -inline 20
 
+Test main
+  Command:        $test
