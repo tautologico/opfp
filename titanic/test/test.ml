@@ -45,10 +45,29 @@ let t_entropia ctxt =
   List.iter (assert_equal ~cmp:(cmp_float ~epsilon:0.001) 0.0)
             [entropia sobreviventes; entropia mortos]
 
+let t_max_f ctxt = 
+  let l1 = [1.1; 0.9; 2.4; 0.2; 3.7; 5.8; 0.3] in
+  let m, _ = max_f (fun x -> x *. x) l1 in
+  assert_equal ~cmp:(cmp_float ~epislon:0.0001) m 5.8
+
+let t_particao_lista ctxt = 
+  let h1 = Hash.create 10 in
+  Hash.add h1 1 [1; 2];
+  Hash.add h1 4 [3; 7];
+  Hash.add h1 9 [2; 2];
+  let l1 = particao_lista h1 in
+  assert_bool "[1; 2] deve aparecer na lista convertida da tabela hash" (List.mem [1; 2] l1);
+  assert_bool "[3; 7] deve aparecer na lista convertida da tabela hash" (List.mem [3; 7] l1);
+  assert_bool "[2; 2] deve aparecer na lista convertida da tabela hash" (List.mem [2; 2] l1)
+
 (* a suite de testes *)
 let suite = 
   "suite" >:::
-    ["calculo de entropia" >:: t_entropia]
+    [
+      "calculo de entropia" >:: t_entropia;
+      "max_f" >:: t_max_f;
+      "partical_lista" >:: t_particao_lista
+    ]
 
 (* executor dos testes *)
 let () = 
