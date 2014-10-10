@@ -247,8 +247,12 @@ let particao t s =
   List.iter2 (atualiza_part phash) results s; 
   phash
 
+(** Converte uma particao armazenada em uma tabela hash para uma lista de sub-conjuntos *)
+let particao_lista part = 
+  Hash.fold (fun _ si ls -> si :: ls) part []
+
 (** Calcula a entropia apos dividir o conjunto [s] pelo teste [t]. *)
-let entrop_teste t s = 
+let entrop_teste s t = 
   let part = particao t s in
   let entrop_valor i si ac = 
     let frac = (float @@ List.length si) /. (float @@ List.length s) in
@@ -256,8 +260,27 @@ let entrop_teste t s =
   in
   Hash.fold entrop_valor part 0.0 
 
+(** Retorna o item da lista [l] com o maior valor quando aplicado a funcao [f]. *)
+let max_f f l = 
+  let comp e (me, max) = 
+    if f e > max then (e, f e) else (me, max) 
+  in
+  List.fold_right comp l neg_infinity
+  
 (** Constroi uma arvore de decisao seguindo o algoritmo ID3, 
  usando dados de treinamento [d] e a lista de testes [lt]. *)
 let id3 d lt = 
-  let hd = entropia d in
-  Result false
+  let seleciona_teste d lt = 
+    let hd = entropia d in
+    fst @@ max_f (fun t -> hd -. (entrop_teste d t)) lt 
+  in
+  let rec constroi_arvore lt d = 
+    match contagem_classes d with
+    | (n, 0) when n > 0 -> Result true
+    | (0, n) when n > 0 -> Result false
+    | _ -> 
+       let teste = seleciona_teste d lt in
+       Teste (teste, List.map (constroi_arvore 
+  in
+  constroi_arvore d lt 
+
