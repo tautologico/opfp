@@ -3,9 +3,6 @@
  * 
  *)
 
-let arq_treino = "train.csv"
-let arq_teste  = "test.csv"
-
 type classe = Primeira | Segunda | Terceira 
 type genero = Masc | Fem
 type porto = Cherbourg | Queenstown | Southampton
@@ -156,8 +153,8 @@ let escreve_resultado res nome =
   List.iter (fun (id, s) -> Printf.fprintf arqout "%d,%d\n" id s) res;
   close_out arqout
 
-let classifica_teste_por_genero () = 
-  let dados_teste = ler_dados_teste arq_teste in
+let classifica_teste_por_genero arqteste = 
+  let dados_teste = ler_dados_teste arqteste in
   let resultado = sobrevivencia_por_genero dados_teste in
   escreve_resultado resultado "genero.csv" 
 
@@ -198,8 +195,8 @@ let rec aplica_arvore arv p =
 let aplica_arvore_dados arv d = 
   List.map (aplica_arvore arv) d 
 
-let classifica_arv_genero () = 
-  let dados_teste = ler_dados_teste arq_teste in
+let classifica_arv_genero arqteste = 
+  let dados_teste = ler_dados_teste arqteste in
   let resultado = aplica_arvore_dados arv_genero dados_teste in
   escreve_resultado resultado "genero.csv"
 

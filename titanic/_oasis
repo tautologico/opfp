@@ -14,6 +14,15 @@ Library Titanic
   CompiledObject: best
   NativeOpt:      -inline 20
 
+Executable genero
+  Path:           src
+  MainIs:         genero.ml
+  Install:        false  
+  BuildDepends:   Titanic
+  CompiledObject: best
+  ByteOpt:        
+  NativeOpt:      -inline 20
+
 Executable test
   Path:           test
   MainIs:         test.ml
