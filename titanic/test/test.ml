@@ -86,19 +86,23 @@ let t_particao_lista ctxt =
 
 let t_particao ctxt = 
   let part_gen = particao_lista @@ particao testa_genero passageiros in
-  assert_bool "[p2] deve aparecer na particao para mulheres" (List.mem [p2] part_gen);
-  assert_bool "[p1; p3] deve aparecer na particao para homens" (List.mem [p1; p3] part_gen)
+  let part_prec = particao_lista @@ particao testa_preco_4faixas passageiros in
+  let homens = List.nth part_gen 1 in
+  assert_bool "[p2] deve aparecer na particao por genero" (List.mem [p2] part_gen);
+  assert_bool "p1 deve aparecer entre os homens" (List.mem p1 homens);
+  assert_bool "p3 deve aparecer entre os homens" (List.mem p3 homens);
+  assert_equal (List.length part_prec) 4
 
 (* Induz uma arvore apenas com exemplos positivos *)
 let id3_pos ctxt = 
   let teste p = p.id in
-  let arvore = id3 sobreviventes [teste] in
+  let arvore = id3 sobreviventes [teste] false in
   assert_equal arvore (Result true)
 
 (* Induz uma arvore apenas com exemplos negativos *)
 let id3_neg ctxt = 
   let teste p = p.id in
-  let arvore = id3 mortos [teste] in
+  let arvore = id3 mortos [teste] false in
   assert_equal arvore (Result false)
 
 (* a suite de testes *)
@@ -108,7 +112,8 @@ let suite =
       "calculo de entropia" >:: t_entropia;
       "max_f" >:: t_max_f;
       "particao_indice" >:: t_remove_indice;
-      "partical_lista" >:: t_particao_lista;
+      "particao_lista" >:: t_particao_lista;
+      "particao" >:: t_particao;
       "id3 sobreviventes" >:: id3_pos;
       "id3 mortos" >:: id3_neg
     ]

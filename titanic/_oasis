@@ -41,6 +41,15 @@ Executable id3gencls
   ByteOpt:        
   NativeOpt:      -inline 20
 
+Executable id3prgencls
+  Path:           src
+  MainIs:         id3prgencls.ml
+  Install:        false  
+  BuildDepends:   titanic
+  CompiledObject: best
+  ByteOpt:        
+  NativeOpt:      -inline 20
+
 Executable test
   Path:           test
   MainIs:         test.ml

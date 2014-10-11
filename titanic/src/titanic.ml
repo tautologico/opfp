@@ -284,16 +284,18 @@ let rec remove_indice ix l =
   | _, h :: t -> h :: remove_indice (ix-1) t 
  
 (** Constroi uma arvore de decisao seguindo o algoritmo ID3, 
- usando dados de treinamento [d] e a lista de testes [lt]. *)
-let id3 d lt = 
+ usando dados de treinamento [d] e a lista de testes [lt]. 
+ O valor [default] e usado quando a arvore chega em um ramo vazio. *)
+let id3 d lt default = 
   let seleciona_teste d lt = 
     let hd = entropia d in
     fst @@ max_f (fun t -> hd -. (entrop_teste d t)) lt 
   in
   let rec constroi_arvore lt d = 
     match contagem_classes d with
-    | (n, 0) when n > 0 -> Result true
-    | (0, n) when n > 0 -> Result false
+    | (0, 0) -> Result default
+    | (n, 0) -> Result true
+    | (0, n) -> Result false
     | (t, f) ->
        match lt with
        | [] -> if t > f then Result true else Result false
@@ -326,7 +328,7 @@ let testa_preco_4faixas p =
     conjunto de testes. *)
 let arvore_testes arqtreino testes = 
   let d_treino = ler_dados_treino arqtreino in 
-  id3 d_treino testes 
+  id3 d_treino testes false
 
 (** Classifica os dados de treino usando uma arvore de decisao. *)
 let classifica_teste_arvore arv arqteste arqsaida = 
