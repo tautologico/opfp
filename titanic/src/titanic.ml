@@ -315,3 +315,21 @@ let testa_classe p =
   | Primeira -> 0
   | Segunda -> 1
   | Terceira -> 2
+
+let testa_preco_4faixas p = 
+  if p.preco < 10.0 then 0
+  else if p.preco < 20.0 then 1
+  else if p.preco < 30.0 then 2
+  else 3
+
+(** Constroi uma arvore de decisao baseado em dados de treinamento e um 
+    conjunto de testes. *)
+let arvore_testes arqtreino testes = 
+  let d_treino = ler_dados_treino arqtreino in 
+  id3 d_treino testes 
+
+(** Classifica os dados de treino usando uma arvore de decisao. *)
+let classifica_teste_arvore arv arqteste arqsaida = 
+  let d_teste = ler_dados_teste arqteste in
+  let resultado = aplica_arvore_dados arv d_teste in
+  escreve_resultado resultado arqsaida
