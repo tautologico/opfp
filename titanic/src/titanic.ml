@@ -153,10 +153,10 @@ let escreve_resultado res nome =
   List.iter (fun (id, s) -> Printf.fprintf arqout "%d,%d\n" id s) res;
   close_out arqout
 
-let classifica_teste_por_genero arqteste = 
+let classifica_teste_por_genero arqteste arqsaida = 
   let dados_teste = ler_dados_teste arqteste in
   let resultado = sobrevivencia_por_genero dados_teste in
-  escreve_resultado resultado "genero.csv" 
+  escreve_resultado resultado arqsaida
 
 (* Separacao por faixas de preco *)
 type faixa = F0a9 | F10a19 | F20a29 | F30maior 
@@ -195,10 +195,10 @@ let rec aplica_arvore arv p =
 let aplica_arvore_dados arv d = 
   List.map (aplica_arvore arv) d 
 
-let classifica_arv_genero arqteste = 
+let classifica_arv_genero arqteste arqsaida = 
   let dados_teste = ler_dados_teste arqteste in
   let resultado = aplica_arvore_dados arv_genero dados_teste in
-  escreve_resultado resultado "genero.csv"
+  escreve_resultado resultado arqsaida
 
 
 (* Algoritmo ID3 *)

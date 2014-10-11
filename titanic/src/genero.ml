@@ -9,5 +9,6 @@
 
 let () = 
   Printf.printf "Lendo arquivo de teste e escrevendo genero.csv\n";
-  Titanic.classifica_teste_por_genero "data/test.csv" 
+  Titanic.classifica_teste_por_genero "data/test.csv" "genero.csv"
+
 
