@@ -246,7 +246,13 @@ let particao t s =
 
 (** Converte uma particao armazenada em uma tabela hash para uma lista de sub-conjuntos *)
 let particao_lista part = 
-  Hash.fold (fun _ si ls -> si :: ls) part []
+  let max_key = Hash.fold (fun k v max -> if k > max then k else max) part (-1) in
+  let rec const_lista i l = 
+    if i > max_key then l
+    else if (Hash.mem part i) then const_lista (i+1) (Hash.find part i :: l)
+    else const_lista (i+1) l 
+  in
+  const_lista 0 [] |> List.rev 
 
 (** Calcula a entropia apos dividir o conjunto [s] pelo teste [t]. *)
 let entrop_teste s t = 
@@ -257,13 +263,26 @@ let entrop_teste s t =
   in
   Hash.fold entrop_valor part 0.0 
 
-(** Retorna o item da lista [l] com o maior valor quando aplicado a funcao [f]. *)
+(** Retorna o indice do item da lista [l] com o maior valor 
+    quando aplicado a funcao [f]. *)
 let max_f f l = 
-  let comp e (me, max) = 
-    if f e > max then (e, f e) else (me, max) 
+  let rec loop l i mi max = 
+    match l with
+    | [] -> (mi, max)
+    | e :: t -> 
+       let fe = f e in
+       if fe > max then loop t (i+1) i fe 
+       else loop t (i+1) mi max
   in
-  List.fold_right comp l neg_infinity
-  
+  loop l 0 0 neg_infinity
+
+(** Remove o item de indice [ix] na lista [l]. *)
+let rec remove_indice ix l = 
+  match ix, l with
+  | 0, h :: t -> t
+  | 0, [] -> failwith "Indice fora dos limites"
+  | _, h :: t -> h :: remove_indice (ix-1) t 
+ 
 (** Constroi uma arvore de decisao seguindo o algoritmo ID3, 
  usando dados de treinamento [d] e a lista de testes [lt]. *)
 let id3 d lt = 
@@ -275,8 +294,24 @@ let id3 d lt =
     match contagem_classes d with
     | (n, 0) when n > 0 -> Result true
     | (0, n) when n > 0 -> Result false
-    | _ -> 
-       let teste = seleciona_teste d lt in
-       Teste (teste, List.map (constroi_arvore 
+    | (t, f) ->
+       match lt with
+       | [] -> if t > f then Result true else Result false
+       | _ -> 
+          let tix = seleciona_teste d lt in
+          let teste = List.nth lt tix in
+          let prox_lt = remove_indice tix lt in
+          let subs = particao_lista @@ particao teste d in
+          Teste (teste, List.map (constroi_arvore prox_lt) subs)
   in
-  constroi_arvore d lt 
+  constroi_arvore lt d
+
+(* Testes para arvores de decisao *)
+let testa_genero p = 
+  if p.gen = Some Fem then 0 else 1
+
+let testa_classe p = 
+  match p.classe with 
+  | Primeira -> 0
+  | Segunda -> 1
+  | Terceira -> 2
