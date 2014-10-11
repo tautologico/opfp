@@ -85,8 +85,8 @@ let t_particao_lista ctxt =
   assert_bool "[2; 2] deve aparecer na lista convertida da tabela hash" (List.mem [2; 2] l1)
 
 let t_particao ctxt = 
-  let part_gen = particao_lista @@ particao testa_genero passageiros in
-  let part_prec = particao_lista @@ particao testa_preco_4faixas passageiros in
+  let part_gen = particao teste_genero passageiros in
+  let part_prec = particao teste_preco_4faixas passageiros in
   let homens = List.nth part_gen 1 in
   assert_bool "[p2] deve aparecer na particao por genero" (List.mem [p2] part_gen);
   assert_bool "p1 deve aparecer entre os homens" (List.mem p1 homens);
@@ -95,14 +95,12 @@ let t_particao ctxt =
 
 (* Induz uma arvore apenas com exemplos positivos *)
 let id3_pos ctxt = 
-  let teste p = p.id in
-  let arvore = id3 sobreviventes [teste] false in
+  let arvore = id3 sobreviventes [teste_genero] false in
   assert_equal arvore (Result true)
 
 (* Induz uma arvore apenas com exemplos negativos *)
 let id3_neg ctxt = 
-  let teste p = p.id in
-  let arvore = id3 mortos [teste] false in
+  let arvore = id3 mortos [teste_genero] false in
   assert_equal arvore (Result false)
 
 (* a suite de testes *)
