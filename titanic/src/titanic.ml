@@ -177,20 +177,34 @@ let sobrev_faixas d =
 (* Arvores de decisao *)
 (* Especificando arvores manualmente *)
 
-type teste = passageiro -> int
+(** Um teste em uma arvore de decisao *)
+type teste = { 
+  nome : string;           (* nome do teste *)
+  f : passageiro -> int;   (* funcao de teste *)
+  nvals : int              (* numero de valores do teste *)
+}
+
 type arvdec = Teste of teste * arvdec list | Result of bool 
 
 (** Arvore de classificacao por genero. *)
+let test_f_genero p = 
+  if p.gen = Some Fem then 0 else 1
+
+let teste_genero = {
+  nome = "genero";
+  f = test_f_genero;
+  nvals = 2;
+}
+
 let arv_genero = 
-  Teste ((fun p -> if p.gen = Some Fem then 0
-                   else 1), [Result true; Result false])
+  Teste (teste_genero, [Result true; Result false])
 
 (** Classifica o passageiro [p] usando a árvore de decisao [arv]. *) 
 let rec aplica_arvore arv p = 
   match arv with
   | Result true -> (p.id, 1)
   | Result false -> (p.id, 0)
-  | Teste (t, l) -> aplica_arvore (List.nth l (t p)) p
+  | Teste (t, l) -> aplica_arvore (List.nth l (t.f p)) p
 
 let aplica_arvore_dados arv d = 
   List.map (aplica_arvore arv) d 
@@ -233,6 +247,16 @@ module Hash =
 
 (** Particiona o conjunto [s] em subconjuntos de acordo com o teste [t]. *)
 let particao t s = 
+  let atualiza_part a res p = 
+    a.(res) <- p:: a.(res)
+  in
+  let arr = Array.make t.nvals [] in
+  let results = List.map t.f s in
+  List.iter2 (atualiza_part arr) results s;
+  Array.to_list arr
+
+(** Particiona o conjunto [s] em subconjuntos de acordo com o teste [t]. *)
+let particao_hash t s = 
   let atualiza_part h k p = 
     if Hash.mem h k then
       Hash.replace h k (p :: (Hash.find h k))
@@ -257,11 +281,11 @@ let particao_lista part =
 (** Calcula a entropia apos dividir o conjunto [s] pelo teste [t]. *)
 let entrop_teste s t = 
   let part = particao t s in
-  let entrop_valor i si ac = 
+  let entrop_valor si ac = 
     let frac = (float @@ List.length si) /. (float @@ List.length s) in
     ac +. frac *. (entropia si)
   in
-  Hash.fold entrop_valor part 0.0 
+  List.fold_right entrop_valor part 0.0 
 
 (** Retorna o indice do item da lista [l] com o maior valor 
     quando aplicado a funcao [f]. *)
@@ -303,26 +327,36 @@ let id3 d lt default =
           let tix = seleciona_teste d lt in
           let teste = List.nth lt tix in
           let prox_lt = remove_indice tix lt in
-          let subs = particao_lista @@ particao teste d in
+          let subs = particao teste d in
           Teste (teste, List.map (constroi_arvore prox_lt) subs)
   in
   constroi_arvore lt d
 
 (* Testes para arvores de decisao *)
-let testa_genero p = 
-  if p.gen = Some Fem then 0 else 1
 
-let testa_classe p = 
+let test_f_classe p = 
   match p.classe with 
   | Primeira -> 0
   | Segunda -> 1
   | Terceira -> 2
 
-let testa_preco_4faixas p = 
+let teste_classe = {
+  nome = "classe";
+  f = test_f_classe;
+  nvals = 3
+}
+
+let test_f_preco_4faixas p = 
   if p.preco < 10.0 then 0
   else if p.preco < 20.0 then 1
   else if p.preco < 30.0 then 2
   else 3
+
+let teste_preco_4faixas = {
+  nome = "preco em 4 faixas";
+  f = test_f_preco_4faixas;
+  nvals = 4
+}
 
 (** Constroi uma arvore de decisao baseado em dados de treinamento e um 
     conjunto de testes. *)
