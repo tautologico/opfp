@@ -7,7 +7,7 @@ License:      MIT
 Plugins:      META (0.4)
 BuildTools:   ocamlbuild
 
-Library Titanic
+Library titanic
   Path:           src
   Modules:        Titanic
   BuildDepends:   csv (>= 1.3.3)
@@ -18,7 +18,7 @@ Executable genero
   Path:           src
   MainIs:         genero.ml
   Install:        false  
-  BuildDepends:   Titanic
+  BuildDepends:   titanic
   CompiledObject: best
   ByteOpt:        
   NativeOpt:      -inline 20
@@ -27,7 +27,16 @@ Executable arvgenero
   Path:           src
   MainIs:         arvgenero.ml
   Install:        false  
-  BuildDepends:   Titanic
+  BuildDepends:   titanic
+  CompiledObject: best
+  ByteOpt:        
+  NativeOpt:      -inline 20
+
+Executable id3gencls
+  Path:           src
+  MainIs:         id3gencls.ml
+  Install:        false  
+  BuildDepends:   titanic
   CompiledObject: best
   ByteOpt:        
   NativeOpt:      -inline 20
@@ -37,7 +46,7 @@ Executable test
   MainIs:         test.ml
   Install:        false
   Build$:         flag(tests)
-  BuildDepends:   oUnit (>= 2.0.0), Titanic
+  BuildDepends:   oUnit (>= 2.0.0), titanic
   CompiledObject: best
   ByteOpt:        
   NativeOpt:      -inline 20
