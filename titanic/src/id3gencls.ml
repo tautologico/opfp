@@ -8,9 +8,10 @@
  *
  *)
 
+let testes = [Titanic.testa_classe; Titanic.testa_genero]
+
 let () = 
   Printf.printf "Lendo dados de treinamento e construindo arvore\n";
-  let testes = [Titanic.testa_classe; Titanic.testa_genero] in
   let arvore = Titanic.arvore_testes "data/train.csv" testes in
   Printf.printf "Lendo dados de teste e escrevendo gencls.csv\n";
   Titanic.classifica_teste_arvore arvore "data/test.csv" "gencls.csv"
