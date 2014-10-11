@@ -36,20 +36,34 @@ let p3 = {
   id = 3;
   sobreviveu = false;
   classe = Primeira;
-  nome = "Crowley, Patrick";
+  nome = "Crawley, Patrick";
   gen = Some Masc;
   idade = 22.0;
   irmpar = 0;
   paisfilhos = 0;
   passagem = "A1";
-  preco = 12.0;
-  cabine = "A2";
+  preco = 27.0;
+  cabine = "B220";
   embarque = Some Queenstown
 }
 
-(* Patrick e fulano de Downton Abbey *)
+let p4 = { 
+  id = 4;
+  sobreviveu = false;
+  classe = Primeira;
+  nome = "Crawley, James";
+  gen = Some Masc;
+  idade = 51.0;
+  irmpar = 0;
+  paisfilhos = 0;
+  passagem = "A1";
+  preco = 36.0;
+  cabine = "B220";
+  embarque = Some Queenstown
+}
 
-let passageiros = [p1; p2; p3]
+
+let passageiros = [p1; p2; p3; p4]
 
 let sobreviventes = List.filter (fun p -> p.sobreviveu) passageiros
 
