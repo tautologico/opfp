@@ -10,9 +10,9 @@
  *)
 
 let testes = [
-  Titanic.testa_classe; 
-  Titanic.testa_genero;
-  Titanic.testa_preco_4faixas
+  Titanic.teste_classe; 
+  Titanic.teste_genero;
+  Titanic.teste_preco_4faixas
 ]
 
 let () = 

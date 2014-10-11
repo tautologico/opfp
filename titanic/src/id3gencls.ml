@@ -8,7 +8,7 @@
  *
  *)
 
-let testes = [Titanic.testa_classe; Titanic.testa_genero]
+let testes = [Titanic.teste_classe; Titanic.teste_genero]
 
 let () = 
   Printf.printf "Lendo dados de treinamento e construindo arvore\n";
