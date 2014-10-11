@@ -88,16 +88,6 @@ let t_remove_indice ctxt =
   assert_equal (remove_indice 5 l1) [1; 2; 3; 4; 5];
   assert_equal (remove_indice 0 l2) []
 
-let t_particao_lista ctxt = 
-  let h1 = Hash.create 10 in
-  Hash.add h1 1 [1; 2];
-  Hash.add h1 4 [3; 7];
-  Hash.add h1 9 [2; 2];
-  let l1 = particao_lista h1 in
-  assert_bool "[1; 2] deve aparecer na lista convertida da tabela hash" (List.mem [1; 2] l1);
-  assert_bool "[3; 7] deve aparecer na lista convertida da tabela hash" (List.mem [3; 7] l1);
-  assert_bool "[2; 2] deve aparecer na lista convertida da tabela hash" (List.mem [2; 2] l1)
-
 let t_particao ctxt = 
   let part_gen = particao teste_genero passageiros in
   let part_prec = particao teste_preco_4faixas passageiros in
@@ -124,7 +114,6 @@ let suite =
       "calculo de entropia" >:: t_entropia;
       "max_f" >:: t_max_f;
       "particao_indice" >:: t_remove_indice;
-      "particao_lista" >:: t_particao_lista;
       "particao" >:: t_particao;
       "id3 sobreviventes" >:: id3_pos;
       "id3 mortos" >:: id3_neg

@@ -237,14 +237,6 @@ let entropia s =
   if t = 0 || f = 0 then 0.0
   else -. (tfrac *. log2 tfrac) -. (ffrac *. log2 ffrac)
 
-(** Uma hashtable com chave inteira. *)
-module Hash = 
-  Hashtbl.Make (struct 
-                 type t = int
-                 let equal n m = n = m 
-                 let hash n = n 
-               end)
-
 (** Particiona o conjunto [s] em subconjuntos de acordo com o teste [t]. *)
 let particao t s = 
   let atualiza_part a res p = 
@@ -254,29 +246,6 @@ let particao t s =
   let results = List.map t.f s in
   List.iter2 (atualiza_part arr) results s;
   Array.to_list arr
-
-(** Particiona o conjunto [s] em subconjuntos de acordo com o teste [t]. *)
-let particao_hash t s = 
-  let atualiza_part h k p = 
-    if Hash.mem h k then
-      Hash.replace h k (p :: (Hash.find h k))
-    else
-      Hash.add h k [p]
-  in
-  let phash = Hash.create 10 in
-  let results = List.map t s in
-  List.iter2 (atualiza_part phash) results s; 
-  phash
-
-(** Converte uma particao armazenada em uma tabela hash para uma lista de sub-conjuntos *)
-let particao_lista part = 
-  let max_key = Hash.fold (fun k v max -> if k > max then k else max) part (-1) in
-  let rec const_lista i l = 
-    if i > max_key then l
-    else if (Hash.mem part i) then const_lista (i+1) (Hash.find part i :: l)
-    else const_lista (i+1) l 
-  in
-  const_lista 0 [] |> List.rev 
 
 (** Calcula a entropia apos dividir o conjunto [s] pelo teste [t]. *)
 let entrop_teste s t = 
