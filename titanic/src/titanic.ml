@@ -3,10 +3,14 @@
  * 
  *)
 
+(** Árvores de decisão e o problema do Titanic. *)
+
+
 type classe = Primeira | Segunda | Terceira 
 type genero = Masc | Fem
 type porto = Cherbourg | Queenstown | Southampton
 
+(** Um passageiro do Titanic *)
 type passageiro = { 
   id         : int;
   sobreviveu : bool;
@@ -150,7 +154,8 @@ let sobrevivencia_por_genero d =
 let escreve_resultado res nome = 
   let arqout = open_out nome in
   Printf.fprintf arqout "PassengerId,Survived\n"; 
-  List.iter (fun (id, s) -> Printf.fprintf arqout "%d,%d\n" id s) res;
+  res |> List.iter (fun (id, s) -> 
+                    Printf.fprintf arqout "%d,%d\n" id s);
   close_out arqout
 
 let classifica_teste_por_genero arqteste arqsaida = 
@@ -186,7 +191,7 @@ type teste = {
 
 type arvdec = Teste of teste * arvdec list | Result of bool 
 
-(** Arvore de classificacao por genero. *)
+(** Função de teste para classificacao por gênero. *)
 let test_f_genero p = 
   if p.gen = Some Fem then 0 else 1
 
@@ -199,7 +204,8 @@ let teste_genero = {
 let arv_genero = 
   Teste (teste_genero, [Result true; Result false])
 
-(** Classifica o passageiro [p] usando a árvore de decisao [arv]. *) 
+(** [aplica_arvore arv p] classifica o passageiro [p] usando 
+    a árvore de decisão [arv]. *)
 let rec aplica_arvore arv p = 
   match arv with
   | Result true -> (p.id, 1)
@@ -251,7 +257,8 @@ let particao t s =
 let entrop_teste s t = 
   let part = particao t s in
   let entrop_valor si ac = 
-    let frac = (float @@ List.length si) /. (float @@ List.length s) in
+    let frac = (float @@ List.length si) /. 
+               (float @@ List.length s) in
     ac +. frac *. (entropia si)
   in
   List.fold_right entrop_valor part 0.0 
@@ -273,7 +280,7 @@ let max_f f l =
 let rec remove_indice ix l = 
   match ix, l with
   | 0, h :: t -> t
-  | 0, [] -> failwith "Indice fora dos limites"
+  | _, [] -> failwith "Indice fora dos limites"
   | _, h :: t -> h :: remove_indice (ix-1) t 
  
 (** Constroi uma arvore de decisao seguindo o algoritmo ID3, 
