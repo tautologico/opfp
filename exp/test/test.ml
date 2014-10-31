@@ -17,7 +17,7 @@ let e3 = Soma (Mult (Soma (Const 4, Const 3), Const 2), Const 5)
 
 let t_eval ctxt = 
   let pares = [(e1, 10); (e2, 14); (e3, 19)] in
-  List.iter (fun e, v -> assert_equal (eval e) v) pares
+  List.iter (fun (e, v) -> assert_equal (eval e) v) pares
 
 (* a suite de testes *)
 let suite = 
