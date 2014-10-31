@@ -1,0 +1,28 @@
+OASISFormat:  0.4
+Name:         Exp
+Version:      0.0
+Synopsis:     Exemplo de compilacao e interpretacao
+Authors:      Andrei Formiga
+License:      MIT
+Plugins:      META (0.4)
+BuildTools:   ocamlbuild
+
+Library exp
+  Path:           src
+  Modules:        Exp
+  BuildDepends:   
+  CompiledObject: best
+  NativeOpt:      -inline 20
+
+Executable test
+  Path:           test
+  MainIs:         test.ml
+  Install:        false
+  Build$:         flag(tests)
+  BuildDepends:   oUnit (>= 2.0.0), exp
+  CompiledObject: best
+  ByteOpt:        
+  NativeOpt:      -inline 20
+
+Test main
+  Command:        $test
