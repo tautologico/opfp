@@ -1,6 +1,14 @@
 open OUnit2
 open Exp
 
+(* Funcao auxiliar para valores option *)
+
+let valor_option v = 
+  match v with
+  | Some x -> x
+  | None -> failwith "Valor esperado"
+
+
 (* Algumas expressoes *)
 
 (* 4 + 3 * 2 *)
@@ -36,12 +44,27 @@ let t_exec ctxt =
   let pares = [(p1, Some 8); (p2, Some 77)] in
   List.iter (fun (p, v) -> assert_equal (executa p) v) pares
 
+
+(* Testes do compilador *)
+
+let t_compila ctxt = 
+  assert_equal (compila e4) p2
+
+let t_compila_executa ctxt = 
+  let comp_exec e = 
+    e |> compila |> executa |> valor_option 
+  in 
+  let pares = [(e1, 10); (e2, 14); (e3, 19); (e4, 77)] in
+  List.iter (fun (e, v) -> assert_equal (comp_exec e) v) pares
+
 (* a suite de testes *)
 let suite = 
   "suite" >:::
     [
       "interpretador" >:: t_eval;
-      "maquina de pilha" >:: t_exec
+      "maquina de pilha" >:: t_exec;
+      "compilador" >:: t_compila;
+      "compilacao e execucao do programa" >:: t_compila_executa
     ]
 
 (* executor dos testes *)
