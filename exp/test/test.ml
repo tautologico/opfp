@@ -35,8 +35,7 @@ let t_eval ctxt =
 
 let p1 = [Empilha 5; Empilha 3; Oper OpSoma]
 
-let p2 = [Empilha 11; Empilha 0; Oper OpSoma; Empilha 2; Empilha 9; Oper OpSub; Oper OpMult]
-
+let p2 = [Empilha 2; Empilha 9; Oper OpSub; Empilha 0; Empilha 11; Oper OpSoma; Oper OpMult]
 
 (* Testes da maquina de pilha *)
 
