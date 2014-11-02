@@ -90,9 +90,9 @@ let executa p =
 let rec compila e = 
   match e with
   | Const n       -> [Empilha n]
-  | Soma (e1, e2) -> (compila e1) @ (compila e2) @ [Oper OpSoma]
-  | Sub (e1, e2)  -> (compila e1) @ (compila e2) @ [Oper OpSub]
-  | Mult (e1, e2) -> (compila e1) @ (compila e2) @ [Oper OpMult]
+  | Soma (e1, e2) -> (compila e2) @ (compila e1) @ [Oper OpSoma]
+  | Sub (e1, e2)  -> (compila e2) @ (compila e1) @ [Oper OpSub]
+  | Mult (e1, e2) -> (compila e2) @ (compila e1) @ [Oper OpMult]
 
 (* Otimizacao *)
 

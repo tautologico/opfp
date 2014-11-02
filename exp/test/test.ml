@@ -59,7 +59,7 @@ let t_compila_executa ctxt =
 
 (* a suite de testes *)
 let suite = 
-  "suite" >:::
+  "bateria01" >:::
     [
       "interpretador" >:: t_eval;
       "maquina de pilha" >:: t_exec;
@@ -70,3 +70,4 @@ let suite =
 (* executor dos testes *)
 let () = 
   run_test_tt_main suite
+
