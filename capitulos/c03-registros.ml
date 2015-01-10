@@ -3,7 +3,7 @@
   OCaml: Programação Funcional na Prática
   Andrei de A. Formiga - Casa do Código
 
-  Exemplos do Capítulo 02 - Tipos e valores basicos
+  Exemplos do Capítulo 03 - Registros e variantes
 
  *)
 
