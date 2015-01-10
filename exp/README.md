@@ -1,8 +1,8 @@
 Compilação e Interpretação
 ====
 
-Este diretório contém os exemplos de código do Capítulo 6 do livro, 
-Interpretador e Compilador. 
+Este diretório contém os exemplos de código do Capítulo 6 do livro,
+"Exemplo: compilador e interpretador".
 
 ## Testes
 
