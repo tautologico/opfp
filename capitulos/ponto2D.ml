@@ -1,3 +1,14 @@
+(* 
+
+  OCaml: Programação Funcional na Prática
+  Andrei de A. Formiga - Casa do Código
+
+  Este é um exemplo do Capítulo 08 - Módulos, 
+  na seção 8.3 - Módulos e arquivos. 
+  O arquivo ponto2D.ml define o módulo Ponto2D.
+
+ *)
+
 type t = { x : int; y : int }
 
 let zero () = { x = 0; y = 0 }
