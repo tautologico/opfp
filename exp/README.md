@@ -1,8 +1,12 @@
 Compilação e Interpretação
 ====
 
-Este diretório contém os exemplos de código do Capítulo 6 do livro,
+Este diretório contém os exemplos de código do capítulo 6 do livro,
 "Exemplo: compilador e interpretador".
+
+O uso do OASIS para organizar o projeto e da biblioteca ounit para
+testes de unidade é mostrado no capítulo 13 do livro,
+"Organização de projeto e testes".
 
 ## Testes
 
