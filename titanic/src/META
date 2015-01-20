@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: d34787ec3eaa280b46d08a6a78445a48)
+version = "0.0"
+description = "Arvores de decisao para o problema do Titanic"
+requires = "csv"
+archive(byte) = "titanic.cma"
+archive(byte, plugin) = "titanic.cma"
+archive(native) = "titanic.cmxa"
+archive(native, plugin) = "titanic.cmxs"
+exists_if = "titanic.cma"
+# OASIS_STOP
+

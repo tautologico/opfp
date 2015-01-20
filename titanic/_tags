@@ -1,0 +1,52 @@
+# OASIS_START
+# DO NOT EDIT (digest: 3477eb22408328e5953d829479ce0893)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library titanic
+"src/titanic.cmxs": use_titanic
+<src/titanic.{cma,cmxa}>: oasis_library_titanic_native
+<src/*.ml{,i,y}>: oasis_library_titanic_native
+# Executable genero
+<src/genero.{native,byte}>: oasis_executable_genero_native
+<src/*.ml{,i,y}>: oasis_executable_genero_native
+<src/genero.{native,byte}>: pkg_csv
+<src/genero.{native,byte}>: use_titanic
+# Executable arvgenero
+<src/arvgenero.{native,byte}>: oasis_executable_arvgenero_native
+<src/*.ml{,i,y}>: oasis_executable_arvgenero_native
+<src/arvgenero.{native,byte}>: pkg_csv
+<src/arvgenero.{native,byte}>: use_titanic
+# Executable id3gencls
+<src/id3gencls.{native,byte}>: oasis_executable_id3gencls_native
+<src/*.ml{,i,y}>: oasis_executable_id3gencls_native
+<src/id3gencls.{native,byte}>: pkg_csv
+<src/id3gencls.{native,byte}>: use_titanic
+# Executable id3prgencls
+<src/id3prgencls.{native,byte}>: oasis_executable_id3prgencls_native
+<src/*.ml{,i,y}>: oasis_executable_id3prgencls_native
+<src/id3prgencls.{native,byte}>: pkg_csv
+<src/id3prgencls.{native,byte}>: use_titanic
+<src/*.ml{,i,y}>: pkg_csv
+<src/*.ml{,i,y}>: use_titanic
+# Executable test
+<test/test.{native,byte}>: oasis_executable_test_native
+<test/*.ml{,i,y}>: oasis_executable_test_native
+<test/test.{native,byte}>: pkg_csv
+<test/test.{native,byte}>: pkg_oUnit
+<test/test.{native,byte}>: use_titanic
+<test/*.ml{,i,y}>: pkg_csv
+<test/*.ml{,i,y}>: pkg_oUnit
+<test/*.ml{,i,y}>: use_titanic
+# OASIS_STOP
