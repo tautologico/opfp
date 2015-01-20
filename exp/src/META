@@ -1,0 +1,11 @@
+# OASIS_START
+# DO NOT EDIT (digest: eaeb45f54abfdba8b57b0b0df3e54ef1)
+version = "0.0"
+description = "Exemplo de compilacao e interpretacao"
+archive(byte) = "exp.cma"
+archive(byte, plugin) = "exp.cma"
+archive(native) = "exp.cmxa"
+archive(native, plugin) = "exp.cmxs"
+exists_if = "exp.cma"
+# OASIS_STOP
+
