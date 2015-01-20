@@ -18,7 +18,7 @@
 *)
 
 
-(** 13.1 Objetos *)
+(** 12.1 Objetos *)
 
 let p = 
   object 
@@ -38,7 +38,7 @@ let get_x_dobro o =
 
 get_x_dobro p;;
 
-(** 13.2 Classes *)
+(** 12.2 Classes *)
 
 class contador = 
   object
